@@ -74,6 +74,7 @@ resource "aws_instance" "this" {
 
   tags = {
     Name = var.instance-name
+    Role = var.instance-role
   }
 
   provisioner "local-exec" {

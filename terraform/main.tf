@@ -20,84 +20,92 @@ resource "aws_key_pair" "key_pair" {
 }
 
 resource "local_file" "private_key" {
-  filename        = "dev-key"
+  filename        = "/home/ahemida96/dev-key.pem"
   content         = tls_private_key.private_key.private_key_pem
   file_permission = "0400"
 }
 
 
-module "jenkins-master" {
-  source = "./modules/server"
+# module "jenkins-master" {
+#   source = "./modules/server"
 
-  sg-name = "jenkins-master-sg"
-  sg-description = "Security group for jenkins master/slave"
-  vpc-id = module.network.vpc-id
-  inbound-rules = {
-    ssh = {
-      from_port   = 22
-      to_port     = 22
-      protocol    = "tcp"
-      cidr_blocks = ["0.0.0.0/0"]
-    }
-    http = {
-      from_port   = 80
-      to_port     = 80
-      protocol    = "tcp"
-      cidr_blocks = ["0.0.0.0/0"]
-    }
-  }
-  outbound-rules = {
-    all = {
-      from_port = 0
-      to_port = 0
-      protocol = "-1"
-      cidr_blocks = ["0.0.0.0/0"]
-    }
-  }
-  subnet-id = module.network.subnets-id[0]
-  instance-type = "t2.medium"
-  ami-type = "ubuntu"
-  key-name = aws_key_pair.key_pair.key_name
-  is-public = true
-  user-data = ""
-  instance-name = "jenkins-master"
-}
+#   sg-name = "jenkins-master-sg"
+#   sg-description = "Security group for jenkins master/slave"
+#   vpc-id = module.network.vpc-id
+#   inbound-rules = {
+#     ssh = {
+#       from_port   = 22
+#       to_port     = 22
+#       protocol    = "tcp"
+#       cidr_blocks = ["0.0.0.0/0"]
+#     }
+#     http = {
+#       from_port   = 80
+#       to_port     = 80
+#       protocol    = "tcp"
+#       cidr_blocks = ["0.0.0.0/0"]
+#     }
+#     jenkins = {
+#       from_port   = 8080
+#       to_port     = 8080
+#       protocol    = "tcp"
+#       cidr_blocks = ["0.0.0.0/0"]
+#     }
+#   }
+#   outbound-rules = {
+#     all = {
+#       from_port = 0
+#       to_port = 0
+#       protocol = "-1"
+#       cidr_blocks = ["0.0.0.0/0"]
+#     }
+#   }
+#   subnet-id = module.network.subnets-id[0]
+#   instance-type = "t2.medium"
+#   ami-type = "ubuntu"
+#   key-name = aws_key_pair.key_pair.key_name
+#   is-public = true
+#   user-data = ""
+#   instance-name = "jenkins-master"
+# 	instance-role = "jenkins-master"
+# }
 
-module "jenkins-slave" {
-  source = "./modules/server"
+# module "jenkins-slave" {
+#   source = "./modules/server"
 
-  sg-name = "jenkins-slave-sg"
-  sg-description = "Security group for jenkins master/slave"
-  vpc-id = module.network.vpc-id
-  inbound-rules = {
-    ssh = {
-      from_port   = 22
-      to_port     = 22
-      protocol    = "tcp"
-      cidr_blocks = ["0.0.0.0/0"]
-    }
-    http = {
-      from_port   = 80
-      to_port     = 80
-      protocol    = "tcp"
-      cidr_blocks = ["0.0.0.0/0"]
-    }
-  }
-  outbound-rules = {
-    all = {
-      from_port = 0
-      to_port = 0
-      protocol = "-1"
-      cidr_blocks = ["0.0.0.0/0"]
-    }
-  }
-  subnet-id = module.network.subnets-id[1]
-  instance-type = "t2.medium"
-  ami-type = "ubuntu"
-  key-name = aws_key_pair.key_pair.key_name
-  is-public = true
-  instance-name = "jenkins-slave"
-}
+#   sg-name = "jenkins-slave-sg"
+#   sg-description = "Security group for jenkins master/slave"
+#   vpc-id = module.network.vpc-id
+#   inbound-rules = {
+#     ssh = {
+#       from_port   = 22
+#       to_port     = 22
+#       protocol    = "tcp"
+#       cidr_blocks = ["0.0.0.0/0"]
+#     }
+#     http = {
+#       from_port   = 80
+#       to_port     = 80
+#       protocol    = "tcp"
+#       cidr_blocks = ["0.0.0.0/0"]
+#     }
+#   }
+#   outbound-rules = {
+#     all = {
+#       from_port = 0
+#       to_port = 0
+#       protocol = "-1"
+#       cidr_blocks = ["0.0.0.0/0"]
+#     }
+#   }
+#   subnet-id = module.network.subnets-id[1]
+#   instance-type = "t2.medium"
+#   ami-type = "ubuntu"
+#   key-name = aws_key_pair.key_pair.key_name
+#   is-public = true
+#   instance-name = "jenkins-agent"
+# 	instance-role = "jenkins-agent"
+# }
 
 module "sonarqube" {
   source = "./modules/server"
@@ -118,6 +126,12 @@ module "sonarqube" {
       protocol    = "tcp"
       cidr_blocks = ["0.0.0.0/0"]
     }
+    sonarqube = {
+      from_port   = 9000
+      to_port     = 9000
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
   }
   outbound-rules = {
     all = {
@@ -133,4 +147,5 @@ module "sonarqube" {
   key-name = aws_key_pair.key_pair.key_name
   is-public = true
   instance-name = "sonarQube"
+	instance-role = "sonarqube"
 }

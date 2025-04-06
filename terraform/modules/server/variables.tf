@@ -70,3 +70,8 @@ variable "is-public" {
   type        = bool
   default     = false
 }
+
+variable "instance-role" {
+  description = "Specify the role for the instance"
+  type        = string
+}
