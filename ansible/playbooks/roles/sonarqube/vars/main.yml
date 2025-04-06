@@ -1,0 +1,6 @@
+---
+# vars file for sonarqube
+sonarqube_dir: "/opt/sonarqube_data"
+sonarqube_container_name: "sonarqube"
+sonarqube_port: 9000
+host_port: 9000

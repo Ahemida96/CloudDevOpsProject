@@ -1,0 +1,31 @@
+- name: Create Jenkins Agent directory
+  file:
+    path: /opt/jenkins-agent
+    state: directory
+
+- name: Prints two lines of messages, but only if there is an environment value set
+  ansible.builtin.debug:
+    msg:
+    - "{{ groups }}"
+
+- name: Get Jenkins Master IP from EC2 tags
+  set_fact:
+    jenkins_master_ip: "{{ groups['jenkins_master'][0] }}"
+  
+- name: Set Jenkins Master URL
+  set_fact:
+    jenkins_master_url: "http://{{ jenkins_master_ip }}:8080"
+
+- name: Download agent JAR
+  get_url:
+    url: "{{ jenkins_master_url }}/jnlpJars/agent.jar"
+    dest: /opt/jenkins-agent/agent.jar
+
+
+- name: Copy SSH Private Key for Jenkins Slave
+  copy:
+    src: ~/dev-key.pem
+    dest: "{{ key_path }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0600'

@@ -1,0 +1,4 @@
+# jenkins_plugins:
+#   - git
+#   - docker
+#   - pipeline

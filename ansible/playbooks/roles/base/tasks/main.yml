@@ -1,0 +1,20 @@
+- name: Install common packages
+  apt:
+    pkg:
+      - git
+      - docker.io
+      - openjdk-17-jdk  # Jenkins/SonarQube requirement
+      - unzip
+    update_cache: yes
+
+- name: Start Docker
+  systemd:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: Add current user to docker group
+  user:
+    name: "{{ ansible_user }}"
+    groups: docker
+    append: yes

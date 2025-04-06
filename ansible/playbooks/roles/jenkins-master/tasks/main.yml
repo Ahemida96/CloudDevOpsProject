@@ -1,0 +1,69 @@
+# roles/jenkins-role/tasks/main.yml
+---
+- name: Install Java-17
+  ansible.builtin.apt:
+    name: 
+        - openjdk-17-jdk 
+        - openjdk-17-jre
+    state: present
+
+- name: Add Jenkins repository key
+  ansible.builtin.apt_key:
+    url: https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+    state: present
+
+- name: Add Jenkins repository
+  ansible.builtin.apt_repository:
+    repo: deb https://pkg.jenkins.io/debian-stable binary/
+    state: present
+
+- name: Install Jenkins
+  ansible.builtin.apt:
+    name: jenkins
+    state: present
+    update_cache: true
+
+- name: Start and enable Jenkins
+  ansible.builtin.service:
+    name: jenkins
+    state: started
+    enabled: true
+    
+- name: Copy SSH Private Key for Jenkins Slave
+  copy:
+    src: ~/dev-key.pem
+    dest: "{{ key_path }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0600'
+
+- name: Open port 8080 in UFW
+  command: ufw allow 8080/tcp
+  ignore_errors: true
+  become: true
+
+- name: Reload UFW to apply changes
+  command: ufw reload
+  ignore_errors: true
+  become: true
+
+- name: Store file into ./jenkins_initial_password
+  ansible.builtin.fetch:
+    src: /var/lib/jenkins/secrets/initialAdminPassword
+    dest: ./jenkins_initial_password
+    flat: true
+
+- name: Display Password Location
+  ansible.builtin.debug:
+    msg: "Password saved to ./jenkins_initial_password"
+
+- name: Wait for Jenkins to start
+  ansible.builtin.uri:
+    url: http://localhost:8080
+    status_code: 403  # Jenkins returns 403 during setup
+  register: result
+  until: result.status == 403
+  retries: 10
+  delay: 10
+
+

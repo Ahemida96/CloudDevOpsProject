@@ -1,0 +1,26 @@
+- name: Create SonarQube data directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+  loop:
+    - "{{ sonarqube_dir }}/data"
+    - "{{ sonarqube_dir }}/extensions"
+    - "{{ sonarqube_dir }}/logs"
+
+- name: Deploy SonarQube container
+  docker_container:
+    name: "{{ sonarqube_container_name }}"
+    image: sonarqube:latest
+    state: started
+    restart_policy: unless-stopped
+    ports:
+      - "{{ sonarqube_port }}:{{ host_port }}"
+    env:
+      SONAR_ES_BOOTSTRAP_CHECKS_DISABLE: "true"
+    volumes:
+      - "{{ sonarqube_dir }}/data:/opt/sonarqube/data"
+      - "{{ sonarqube_dir }}/extensions:/opt/sonarqube/extensions"
+      - "{{ sonarqube_dir }}/logs:/opt/sonarqube/logs"

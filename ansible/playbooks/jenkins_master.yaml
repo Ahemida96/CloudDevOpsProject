@@ -1,0 +1,6 @@
+---
+- name: Install Jenkins using custom roles
+  hosts: jenkins_master
+  roles:
+    - base
+    - jenkins-master

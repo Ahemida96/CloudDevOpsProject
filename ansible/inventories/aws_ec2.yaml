@@ -1,0 +1,25 @@
+# make sure to install amazon.aws Collection
+# ansible-galaxy collection install amazon.aws
+
+plugin: amazon.aws.aws_ec2
+aws_profile: Admin
+regions:
+  - us-east-1
+filters:
+  instance-state-name: running
+hostnames:
+  - ip-address  # This dynamically fetches the actual public IPs
+
+keyed_groups:
+  - key: tags.Role
+    separator: ''
+compose:
+  ansible_host: ip_address  # Ensures Ansible connects via public IP
+  ansible_user: "'ubuntu'"
+  ansible_ssh_private_key_file: "'/home/ahemida96/dev-key.pem'"
+  ansible_ssh_common_args: '-o StrictHostKeyChecking=no'  
+
+# cache: yes
+# # Plugin to be used.
+# cache_plugin: jsonfile
+# cache_timeout: 3600

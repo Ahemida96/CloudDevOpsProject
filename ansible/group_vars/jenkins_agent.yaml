@@ -1,0 +1,2 @@
+# jenkins_master_url: http://<JENKINS_MASTER_IP>:8080
+# agent_secret: "{{ vault_agent_secret }}"  # Use ansible-vault

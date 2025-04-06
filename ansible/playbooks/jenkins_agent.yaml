@@ -1,0 +1,5 @@
+- name: Manage and configure jenkins agent node
+  hosts: jenkins_agent
+  roles:
+    - base
+    - jenkins-agent

@@ -1,0 +1,3 @@
+---
+# vars file for jenkins
+key_path: "/home/{{ ansible_user }}/.ssh/dev-key.pem" 
