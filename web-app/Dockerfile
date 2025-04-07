@@ -21,7 +21,7 @@ FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 
 # Copy the built JAR file
-COPY --from=builder /app/build/libs/*.jar app.jar 
+COPY --from=builder /app/build/libs/demo-*.jar app.jar 
 
 # Expose port
 EXPOSE 8081
