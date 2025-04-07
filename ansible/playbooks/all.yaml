@@ -1,0 +1,19 @@
+---
+- name: Install Jenkins using custom roles
+  hosts: jenkins_master
+  roles:
+    - base
+    - jenkins-master
+
+- name: Manage and configure jenkins agent node
+  hosts: jenkins_agent
+  roles:
+    - base
+    - jenkins-agent
+
+- name: Install SonarQube using custom roles
+  hosts: sonarqube
+  become: true
+  roles:
+    - base
+    - sonarqube
