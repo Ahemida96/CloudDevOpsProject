@@ -1,4 +1,4 @@
-@Library('ivolve-shared-library') _
+@Library('CI-shared-lib') _
 
 pipeline {
     agent {
