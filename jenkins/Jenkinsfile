@@ -1,0 +1,94 @@
+@Library('ivolve-shared-library') _
+
+pipeline {
+    agent {
+        label 'agent'
+    }
+    
+    environment {
+        BRANSH_NAME = 'master'
+        GITHUB_CREDENTIALS_ID = 'github-credentials'
+        GITHUB_URL = 'https://github.com/Ahemida96/CloudDevOpsProject.git'
+        
+        REGISTRY_USERNAME = "ahemida96"
+        REGISTRY_CREDENTIALS_ID = 'dockerhub-credentials'
+        IMAGE_NAME = 'ivolve-app'
+       
+        scannerHome = tool 'sonar'
+
+        MANIFEST_DIR = "k8s"
+        MANIFEST_FILE = "deployment.yaml"
+
+    }
+
+    stages {
+
+        stage('Clone Git') {
+            steps {
+                git branch: BRANSH_NAME,
+                    credentialsId: GITHUB_CREDENTIALS_ID,
+                    url: GITHUB_URL
+            }
+        }
+        
+        stage('Unit Test') {
+            steps {
+                script {
+                    dir('web-app'){
+                        UnitTest()
+                    }
+                }
+            }
+        }
+        
+        stage('SonarQube Analysis') {
+            steps{
+                dir('web-app') {
+                    SonarqubeTest()
+                }
+            }
+        }
+        
+        stage('Build Jar') {
+            steps {
+                dir('web-app'){
+                    JavaBuild()
+                }
+            }
+        }
+        stage('Docker Build and Push') {
+            steps {
+                dir('web-app'){
+                    Docker(IMAGE_NAME, REGISTRY_CREDENTIALS_ID)
+                }
+            }
+        }
+        stage('Update Manifest') {
+            steps {
+                dir('k8s'){
+                    ManifestUpdate(
+                        image_name: IMAGE_NAME,
+                        github_credentials: GITHUB_CREDENTIALS_ID,
+                        manifestFile: MANIFEST_FILE,
+                        manifestDir: MANIFEST_DIR,
+                        gitEmail: "jenkins@example.com",
+                        gitUsername: "jenkins",
+                        manifest_repo: GITHUB_URL
+                    )
+                }
+            }
+        }
+    }
+    post {
+        always {
+            cleanWs()  // Clean workspace after build
+
+        }
+        success {
+            echo "Build succeeded!"
+        }
+        failure {
+            echo "Build failed!"
+        }
+    }
+}
