@@ -11,7 +11,7 @@ pipeline {
         GITHUB_URL = 'https://github.com/Ahemida96/CloudDevOpsProject.git'
         
         REGISTRY_USERNAME = "ahemida96"
-        REGISTRY_CREDENTIALS_ID = 'dockerhub-credentials'
+        REGISTRY_CREDENTIALS_ID = 'docker-credentials'
         IMAGE_NAME = 'ivolve-app'
        
         scannerHome = tool 'sonar'
@@ -68,12 +68,13 @@ pipeline {
                 dir('k8s'){
                     ManifestUpdate(
                         image_name: IMAGE_NAME,
-                        github_credentials: GITHUB_CREDENTIALS_ID,
+                        // github_credentials: GITHUB_CREDENTIALS_ID,
                         manifestFile: MANIFEST_FILE,
                         manifestDir: MANIFEST_DIR,
                         gitEmail: "jenkins@example.com",
                         gitUsername: "jenkins",
-                        manifest_repo: GITHUB_URL
+                        dockerhubUsername: REGISTRY_USERNAME,
+                        // manifest_repo: GITHUB_URL
                     )
                 }
             }
