@@ -1,10 +1,13 @@
 #!/usr/bin/env groovy
 
-def call(String image_name, String dockerHubCredentialsID) {
+def call(String imageName, String dockerHubCredentialsID) {
     withCredentials([usernamePassword(credentialsId: "${dockerHubCredentialsID}", usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-        sh "docker login -u ${USERNAME} -p ${PASSWORD}"
-        sh 'docker build -t ${USERNAME}/${image_name}:${BUILD_ID} .'
-        sh 'docker push ${USERNAME}/${image_name}:${BUILD_ID}'
-        sh 'docker rmi ${USERNAME}/${image_name}:${BUILD_ID}'
+        sh """
+            echo ${imageName}
+            docker login -u ${USERNAME} -p ${PASSWORD}
+            docker build -t ${USERNAME}/${imageName}:${env.BUILD_ID} .
+            docker push ${USERNAME}/${imageName}:${env.BUILD_ID}
+            docker rmi ${USERNAME}/${imageName}:${env.BUILD_ID}
+        """
     }
 }

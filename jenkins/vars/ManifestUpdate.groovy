@@ -18,9 +18,12 @@ def call (Map config) {
     }
 
     // git branch: 'main', url: "${manifest_repo}", credentialsId: "${github-credentials}"
-    sh "git config user.name ${gitUsername}"
-    sh "git config user.email ${gitEmail}"
-    sh "git add ${manifestFile}"
-    sh "git commit -m 'Updated image to ${dockerhubUsername}/${image_name}:${BUILD_ID}'"
-    sh "git push origin master"
+    sh """
+        git config --global user.name ${gitUsername}
+        git config --global user.email ${gitEmail}
+        git add ${manifestFile}
+        git commit -m 'Updated image to ${dockerhubUsername}/${image_name}:${BUILD_ID}'
+        git push origin master
+
+    """
 }
