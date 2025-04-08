@@ -65,18 +65,16 @@ pipeline {
         }
         stage('Update Manifest') {
             steps {
-                dir('k8s'){
-                    ManifestUpdate(
-                        image_name: IMAGE_NAME,
-                        // github_credentials: GITHUB_CREDENTIALS_ID,
-                        manifestFile: MANIFEST_FILE,
-                        manifestDir: MANIFEST_DIR,
-                        gitEmail: "jenkins@example.com",
-                        gitUsername: "jenkins",
-                        dockerhubUsername: REGISTRY_USERNAME,
-                        // manifest_repo: GITHUB_URL
-                    )
-                }
+                ManifestUpdate(
+                    image_name: IMAGE_NAME,
+                    // github_credentials: GITHUB_CREDENTIALS_ID,
+                    manifestFile: MANIFEST_FILE,
+                    manifestDir: MANIFEST_DIR,
+                    gitEmail: "jenkins@example.com",
+                    gitUsername: "jenkins",
+                    dockerhubUsername: REGISTRY_USERNAME,
+                    // manifest_repo: GITHUB_URL
+                )
             }
         }
     }
