@@ -7,7 +7,7 @@ spec:
   project: default
 
   source:
-    repoURL: https://github.com/Ahemida96/CloudDevOpsProject.git
+    repoURL: https://github.com/Ahemida96/argocd-manifest.git
     targetRevision: HEAD
     path: ./k8s
   destination:
