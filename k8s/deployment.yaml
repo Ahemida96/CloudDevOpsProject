@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: java-app
-        image: ahemida96/ivolve-app
+        image: ahemida96/ivolve-app:latest
         imagePullPolicy: "IfNotPresent"
         resources:
           limits:
