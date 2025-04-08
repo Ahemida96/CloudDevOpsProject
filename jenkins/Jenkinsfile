@@ -70,9 +70,9 @@ pipeline {
                     // github_credentials: GITHUB_CREDENTIALS_ID,
                     manifestFile: MANIFEST_FILE,
                     manifestDir: MANIFEST_DIR,
-                    gitEmail: "jenkins@example.com",
-                    gitUsername: "jenkins",
-                    dockerhubUsername: REGISTRY_USERNAME,
+                    email: "jenkins@example.com",
+                    username: "jenkins",
+                    dockerhub_username: REGISTRY_USERNAME,
                     // manifest_repo: GITHUB_URL
                 )
             }
