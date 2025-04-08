@@ -7,15 +7,15 @@ pipeline {
     
     environment {
         BRANSH_NAME = 'master'
-        GITHUB_CREDENTIALS_ID = 'github-credentials'
+        GITHUB_CREDENTIALS_ID = 'general-github-credentials'
         GITHUB_URL = 'https://github.com/Ahemida96/CloudDevOpsProject.git'
-        
         REGISTRY_USERNAME = "ahemida96"
         REGISTRY_CREDENTIALS_ID = 'docker-credentials'
         IMAGE_NAME = 'ivolve-app'
        
         scannerHome = tool 'sonar'
 
+        MANIFEST_REPO= 'https://github.com/Ahemida96/argocd-manifest.git'
         MANIFEST_DIR = "k8s"
         MANIFEST_FILE = "deployment.yaml"
 
@@ -67,13 +67,13 @@ pipeline {
             steps {
                 ManifestUpdate(
                     image_name: IMAGE_NAME,
-                    // github_credentials: GITHUB_CREDENTIALS_ID,
+                    github_credentials: GITHUB_CREDENTIALS_ID,
                     manifestFile: MANIFEST_FILE,
                     manifestDir: MANIFEST_DIR,
                     email: "jenkins@example.com",
                     username: "jenkins",
                     dockerhub_username: REGISTRY_USERNAME,
-                    // manifest_repo: GITHUB_URL
+                    manifest_repo: MANIFEST_REPO
                 )
             }
         }
